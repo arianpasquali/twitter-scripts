@@ -33,7 +33,7 @@ class CustomStreamListener(tweepy.StreamListener):
                 user_bio = status.user.description.encode("utf-8")
             
             print "-----------------------------------------------------------------------"
-            print "who : ", status.user.name.encode("utf-8")
+            print "who  : ", status.user.name.encode("utf-8")
             print "when : ", status.created_at
             print "what : ", text.encode("utf-8")
             print "where: ", status.place.full_name.encode("utf-8")
