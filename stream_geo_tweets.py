@@ -22,27 +22,23 @@ class CustomStreamListener(tweepy.StreamListener):
         if(status.place != None):
 
             retweet_count = 0;
-            user_bio = ""
             
             if( hasattr(status,"retweeted_status")):
                 if(status.retweeted_status != None):    
                     retweet_count = status.retweeted_status.retweet_count
             
-            if(status.user.description != None):
-                user_bio = status.user.description.encode("utf-8")
-            
             print "-----------------------------------------------------------------------"
             print "who  : ", status.user.name.encode("utf-8")
             print "when : ", status.created_at
             print "what : ", text.encode("utf-8")
-            print "where: ", status.place.full_name.encode("utf-8")
+            print "where: ", status.place.name.encode("utf-8")
             
             csvwriter.writerow([status.id,
                                 status.created_at,
                                 status.user.id,
                                 status.user.screen_name,
                                 status.user.name.encode("utf-8"),
-                                user_bio,
+                                status.user.description.encode("utf-8") if status.user.description != None else ''
                                 status.user.created_at,
                                 status.user.followers_count,
                                 status.user.friends_count,
@@ -55,8 +51,8 @@ class CustomStreamListener(tweepy.StreamListener):
                                 status.place.place_type,
                                 status.place.country_code,
                                 status.place.country.encode("utf-8"),
-                                status.place.name.encode("utf-8"),
-                                status.place.full_name.encode("utf-8")
+                                status.place.name.encode("utf-8"),                                
+                                status.place.full_name.encode("utf-8") if status.place.full_name != None else ''
                                 ])
             
     def on_error(self, status_code):
