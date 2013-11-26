@@ -1,6 +1,5 @@
 import sys
 import tweepy
-from textblob import TextBlob
 import json, csv
 
 consumer_key=""
@@ -16,20 +15,7 @@ csvfile = open("tweet_facts.csv","w")
 csvwriter = csv.writer(csvfile, delimiter=',',quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
 class CustomStreamListener(tweepy.StreamListener):
-    
-    def compute_sentiment(self,textblob):
-        value = textblob.sentiment
         
-        return value
-        
-        # if(value > 0.2):
-#             return "Positive"
-#         else:
-#             if(value < -0.2):
-#                 return "Negative"
-#             else:
-#                 return "Neutral"
-    
     def on_status(self, status):
         text = status.text
         # print text.encode("utf-8")
@@ -74,12 +60,6 @@ class CustomStreamListener(tweepy.StreamListener):
                                 status.place.full_name.encode("utf-8")
                                 ])
             
-        # text_blob  = TextBlob(text)
-        # sentiment = self.compute_sentiment(text_blob)
-        
-        # if(int(sentiment[1]) != 0):
-            # print sentiment, " - ", text_blob.detect_language()
-
     def on_error(self, status_code):
         print >> sys.stderr, 'Encountered error with status code:', status_code
         return True # Don't kill the stream
