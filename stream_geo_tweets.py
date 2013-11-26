@@ -35,7 +35,7 @@ class CustomStreamListener(tweepy.StreamListener):
             print "who  : ", status.user.name.encode("utf-8")
             print "when : ", status.created_at
             print "what : ", text.encode("utf-8")
-            print "where: ", status.place.name.encode("utf-8")
+            print "where: ", status.place.full_name.encode("utf-8")
             
             csvwriter.writerow([status.id,
                                 status.created_at,
