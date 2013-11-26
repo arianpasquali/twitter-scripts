@@ -3,10 +3,10 @@ import tweepy
 from textblob import TextBlob
 import json, csv
 
-consumer_key="GJGALwtkuTDljV3eBDAYaQ"
-consumer_secret="lGENO2QQVasMzalcpp6A3fAciNO1u0wA2ZihMpibyY0"
-access_key = "1689890738-QzDeXa7AvDQw7NUQeTaSjSgIE0Y6JRfZCNbMDwH"
-access_secret = "f3pna4v7OnxbDtfwGsUhirlHrHHm2Vq4Jw92jrBN2o" 
+consumer_key=""
+consumer_secret=""
+access_key = ""
+access_secret = "" 
 
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_key, access_secret)
