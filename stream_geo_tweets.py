@@ -20,15 +20,14 @@ class CustomStreamListener(tweepy.StreamListener):
         text = status.text
         # print text.encode("utf-8")
         if(status.place != None):
-            bb = status.place
-            
+
             retweet_count = 0;
+            user_bio = ""
             
             if( hasattr(status,"retweeted_status")):
                 if(status.retweeted_status != None):    
                     retweet_count = status.retweeted_status.retweet_count
             
-            user_bio = ""
             if(status.user.description != None):
                 user_bio = status.user.description.encode("utf-8")
             
