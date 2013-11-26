@@ -1,6 +1,6 @@
 import sys
 import tweepy
-import json, csv
+import csv
 
 consumer_key=""
 consumer_secret=""
