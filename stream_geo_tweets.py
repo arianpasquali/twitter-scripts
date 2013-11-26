@@ -2,21 +2,9 @@ import sys
 import tweepy
 import csv
 import ConfigParser
- 
-config = ConfigParser.RawConfigParser()
-config.read('config.cfg')
 
-consumer_key = config.get("oauth","consumer_key")
-consumer_secret = config.get("oauth","consumer_secret")
-access_key = config.get("oauth","access_key")
-access_secret = config.get("oauth","access_secret")
-
-auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-auth.set_access_token(access_key, access_secret)
-api = tweepy.API(auth)
-
-csvfile = open("tweet_facts.csv","w")
-csvwriter = csv.writer(csvfile, delimiter=',',quotechar='"', quoting=csv.QUOTE_MINIMAL)
+_CONFIG_FILE = "config.cfg"
+_OUTPUT_FILE = "tweets.csv"
 
 class CustomStreamListener(tweepy.StreamListener):
         
@@ -67,6 +55,23 @@ class CustomStreamListener(tweepy.StreamListener):
         print >> sys.stderr, 'Timeout...'
         return True # Don't kill the stream
 
-sapi = tweepy.streaming.Stream(auth, CustomStreamListener())
-# sapi.filter(track=['cristiano ronaldo'])
-sapi.sample()
+
+if __name__ == "__main__":
+    config = ConfigParser.RawConfigParser()
+    config.read(_CONFIG_FILE)
+
+    consumer_key = config.get("oauth","consumer_key")
+    consumer_secret = config.get("oauth","consumer_secret")
+    access_key = config.get("oauth","access_key")
+    access_secret = config.get("oauth","access_secret")
+
+    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+    auth.set_access_token(access_key, access_secret)
+    api = tweepy.API(auth)
+
+    csvfile = open(_OUTPUT_FILE,"w")
+    csvwriter = csv.writer(csvfile, delimiter=',',quotechar='"', quoting=csv.QUOTE_MINIMAL)
+    
+    sapi = tweepy.streaming.Stream(auth, CustomStreamListener())
+    # sapi.filter(track=['cristiano ronaldo'])
+    sapi.sample()
