@@ -1,11 +1,15 @@
 import sys
 import tweepy
 import csv
+import ConfigParser
+ 
+config = ConfigParser.RawConfigParser()
+config.read('config.cfg')
 
-consumer_key=""
-consumer_secret=""
-access_key = ""
-access_secret = "" 
+consumer_key = config.get("oauth","consumer_key")
+consumer_secret = config.get("oauth","consumer_secret")
+access_key = config.get("oauth","access_key")
+access_secret = config.get("oauth","access_secret")
 
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_key, access_secret)
@@ -31,14 +35,14 @@ class CustomStreamListener(tweepy.StreamListener):
             print "who  : ", status.user.name.encode("utf-8")
             print "when : ", status.created_at
             print "what : ", text.encode("utf-8")
-            print "where: ", status.place.name.encode("utf-8")
+            print "where: ", status.place.full_name.encode("utf-8")
             
             csvwriter.writerow([status.id,
                                 status.created_at,
                                 status.user.id,
                                 status.user.screen_name,
                                 status.user.name.encode("utf-8"),
-                                status.user.description.encode("utf-8") if status.user.description != None else ''
+                                status.user.description.encode("utf-8") if status.user.description != None else '',
                                 status.user.created_at,
                                 status.user.followers_count,
                                 status.user.friends_count,
