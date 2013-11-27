@@ -2,9 +2,10 @@ import sys
 import tweepy
 import csv
 import ConfigParser
+from optparse import OptionParser
 
-_CONFIG_FILE = "config.cfg"
-_OUTPUT_FILE = "tweets.csv"
+_DEFAULT_CONFIG_FILE = "config.cfg"
+_DEFAULT_OUTPUT_FILE = "tweets.csv"
 
 class CustomStreamListener(tweepy.StreamListener):
         
@@ -56,22 +57,45 @@ class CustomStreamListener(tweepy.StreamListener):
         return True # Don't kill the stream
 
 
-if __name__ == "__main__":
+def open_stream(auth):
+    print "Opening Twitter Stream"
+    try:
+        stream = tweepy.streaming.Stream(auth, CustomStreamListener())
+        # sapi.filter(track=['pepsi'])
+        stream.sample()
+        
+    except Exception as e:
+        print "Exception ", e
+        print "Reconnect"
+        stream.disconnect()
+        open_stream(auth)
+
+def authenticate():    
+    print "Authenticating"    
     config = ConfigParser.RawConfigParser()
-    config.read(_CONFIG_FILE)
+    config.read(cmd_options.config_file)
 
     consumer_key = config.get("oauth","consumer_key")
     consumer_secret = config.get("oauth","consumer_secret")
     access_key = config.get("oauth","access_key")
     access_secret = config.get("oauth","access_secret")
-
+    
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_key, access_secret)
-    api = tweepy.API(auth)
-
-    csvfile = open(_OUTPUT_FILE,"w")
-    csvwriter = csv.writer(csvfile, delimiter=',',quotechar='"', quoting=csv.QUOTE_MINIMAL)
     
-    sapi = tweepy.streaming.Stream(auth, CustomStreamListener())
-    # sapi.filter(track=['cristiano ronaldo'])
-    sapi.sample()
+    api = tweepy.API(auth)
+    
+    return auth
+    
+if __name__ == "__main__":
+    cmd_parser = OptionParser(version="%prog 0.1")
+    cmd_parser.add_option("-C", "--config", type="string", action="store", dest="config_file", help="Config file", default=_DEFAULT_CONFIG_FILE)
+    cmd_parser.add_option("-O", "--output", type="string", action="store", dest="output_file", help="Output file", default=_DEFAULT_OUTPUT_FILE)
+
+    (cmd_options, cmd_args) = cmd_parser.parse_args()
+    
+    csvfile = open(cmd_options.output_file,"w")
+    csvwriter = csv.writer(csvfile, delimiter=',',quotechar='"', quoting=csv.QUOTE_MINIMAL)
+        
+    auth = authenticate()
+    open_stream(auth)
